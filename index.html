@@ -4,54 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SQL Questions</title>
+
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f7fa;
       margin: 0;
-      padding: 20px;
+      padding: 40px;
     }
 
     .question-card {
-      background: white;
+      background: #fff;
       border-radius: 16px;
-      padding: 20px;
+      padding: 25px;
       margin: 30px auto;
-      max-width: 700px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      max-width: 800px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
       position: relative;
-      overflow: hidden;
-    }
-
-    /* Decorative dots */
-    .question-card::before,
-    .question-card::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: #cbd5e0;
-      opacity: 0.3;
-    }
-
-    .question-card::before {
-      width: 80px;
-      height: 80px;
-      top: -20px;
-      left: -20px;
-    }
-
-    .question-card::after {
-      width: 120px;
-      height: 120px;
-      bottom: -40px;
-      right: -40px;
     }
 
     .question-title {
       font-size: 1.4rem;
       font-weight: 600;
       color: #2d3748;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .question-text {
@@ -60,14 +42,17 @@
       margin-bottom: 20px;
     }
 
-    .code-box {
-      background: #1e293b;
-      color: #f8fafc;
-      padding: 15px;
+    pre {
+      background: #1e293b !important;
       border-radius: 12px;
-      font-family: "Courier New", monospace;
-      font-size: 0.95rem;
+      padding: 16px;
       overflow-x: auto;
+      border: 1px solid #0f172a;
+    }
+
+    code {
+      font-family: "Fira Code", "Courier New", monospace;
+      font-size: 0.95rem;
     }
 
     .dots {
@@ -80,60 +65,46 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: #e53e3e;
     }
 
-    .dot:nth-child(2) { background: #dd6b20; }
+    .dot:nth-child(1) { background: #e53e3e; }
+    .dot:nth-child(2) { background: #ecc94b; }
     .dot:nth-child(3) { background: #38a169; }
   </style>
 </head>
 <body>
 
-  <div class="question-card">
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <div class="question-title">Question 1</div>
-    <div class="question-text">Write an SQL query to fetch all employees with a salary greater than 50,000.</div>
-    <div class="code-box">
-      SELECT *  
-      FROM Employees  
-      WHERE Salary &gt; 50000;
-    </div>
-  </div>
+  <div id="questions-container"></div>
 
-  <div class="question-card">
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <div class="question-title">Question 2</div>
-    <div class="question-text">Write an SQL query to find duplicate email addresses in the Users table.</div>
-    <div class="code-box">
-      SELECT Email, COUNT(*)  
-      FROM Users  
-      GROUP BY Email  
-      HAVING COUNT(*) &gt; 1;
-    </div>
-  </div>
+  <script>
+    // Load JSON and render cards
+    fetch("questions.json")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("questions-container");
 
-  <div class="question-card">
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <div class="question-title">Question 3</div>
-    <div class="question-text">Write an SQL query to get the 2nd highest salary.</div>
-    <div class="code-box">
-      SELECT MAX(Salary) AS SecondHighest  
-      FROM Employees  
-      WHERE Salary &lt; (SELECT MAX(Salary) FROM Employees);
-    </div>
-  </div>
+        data.forEach(q => {
+          const card = document.createElement("div");
+          card.className = "question-card";
+
+          card.innerHTML = `
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="question-title">Question ${q.id}</div>
+            <div class="question-text">${q.title}</div>
+            <pre><code class="language-sql">${q.query}</code></pre>
+          `;
+
+          container.appendChild(card);
+        });
+
+        // re-highlight Prism after dynamic load
+        Prism.highlightAll();
+      });
+  </script>
 
 </body>
 </html>
