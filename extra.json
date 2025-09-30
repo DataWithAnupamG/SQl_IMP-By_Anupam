@@ -4,18 +4,13 @@
     "explanation": "SQL is used to communicate with databases...",
     "tables": [
       {
-        "title": "SQL Commands",
-        "headers": ["Command", "Description"],
+        "title": "Fill the table",
+        "headers": ["Name", "Age", "City"],
         "rows": [
-          ["SELECT", "Retrieve data from a table"],
-          ["INSERT", "Add new data into a table"]
+          ["", "", ""],
+          ["", "", ""]
         ]
       }
     ]
-  },
-  {
-    "id": 2,
-    "explanation": "JOIN combines data from multiple tables...",
-    "tables": []
   }
 ]
