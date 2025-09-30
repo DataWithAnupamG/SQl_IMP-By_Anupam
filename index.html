@@ -15,50 +15,32 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f5f7fa;
       margin: 0;
-      padding: 40px;
+      padding: 20px;
     }
 
     .question-card {
       background: #fff;
       border-radius: 16px;
-      padding: 25px;
-      margin: 30px auto;
-      max-width: 800px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      padding: 0;
+      margin: 20px auto;
+      max-width: 95%; /* Fits nicely on mobile */
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       border: 1px solid #e2e8f0;
-      position: relative;
+      overflow: hidden; /* for rounded header */
     }
 
-    .question-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 12px;
-    }
-
-    .question-text {
-      font-size: 1rem;
-      color: #4a5568;
-      margin-bottom: 20px;
-    }
-
-    pre {
-      background: #1e293b !important;
-      border-radius: 12px;
-      padding: 16px;
-      overflow-x: auto;
-      border: 1px solid #0f172a;
-    }
-
-    code {
-      font-family: "Fira Code", "Courier New", monospace;
-      font-size: 0.95rem;
+    /* Header (dots + line) */
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f9fafb;
     }
 
     .dots {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
     }
 
     .dot {
@@ -70,6 +52,50 @@
     .dot:nth-child(1) { background: #e53e3e; }
     .dot:nth-child(2) { background: #ecc94b; }
     .dot:nth-child(3) { background: #38a169; }
+
+    .question-body {
+      padding: 20px;
+    }
+
+    .question-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      color: #4a5568;
+      margin-bottom: 16px;
+    }
+
+    /* Code box */
+    pre {
+      background: #1e293b !important;
+      border-radius: 12px;
+      padding: 14px;
+      overflow-x: auto;
+      border: 1px solid #0f172a;
+    }
+
+    code {
+      font-family: "Fira Code", "Courier New", monospace;
+      font-size: 0.85rem;
+    }
+
+    /* Make text and cards resize well on small screens */
+    @media (max-width: 600px) {
+      .question-title {
+        font-size: 1rem;
+      }
+      .question-text {
+        font-size: 0.85rem;
+      }
+      code {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -88,23 +114,26 @@
           card.className = "question-card";
 
           card.innerHTML = `
-            <div class="dots">
-              <div class="dot"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
+            <div class="card-header">
+              <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
             </div>
-            <div class="question-title">Question ${q.id}</div>
-            <div class="question-text">${q.title}</div>
-            <pre><code class="language-sql">${q.query}</code></pre>
+            <div class="question-body">
+              <div class="question-title">Question ${q.id}</div>
+              <div class="question-text">${q.title}</div>
+              <pre><code class="language-sql">${q.query}</code></pre>
+            </div>
           `;
 
           container.appendChild(card);
         });
 
-        // re-highlight Prism after dynamic load
         Prism.highlightAll();
       });
   </script>
 
 </body>
-</html>
+</
