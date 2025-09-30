@@ -1,4 +1,9 @@
-[
+[ 
+  {
+    "id": 1,
+    "title": "Combine Two Tables", "LeetCode:175",
+    "query": "select p.firstName,p.lastName,a.city,a.state \n from Person p \nleft outer join Address a \n on p.personId=a.personId;"
+  },
   {
     "id": 1.1,
     "title": "Find duplicate records in a table",
@@ -13,11 +18,6 @@
     "id": 3,
     "title": "Find employees without department (Left Join usage)",
     "query": "SELECT e.name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.id\nWHERE d.id IS NULL;"
-  },
-  {
-    "id": 1,
-    "title": "Combine Two Tables",
-    "query": "select p.firstName,p.lastName,a.city,a.state \n from Person p \nleft outer join Address a \n on p.personId=a.personId;"
   },
   {
     "id": 176,
