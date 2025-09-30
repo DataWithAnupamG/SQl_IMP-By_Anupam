@@ -12,5 +12,19 @@
         ]
       }
     ]
+  },
+    {
+    "id": 571,
+    "explanation": "SQL is used to communicate with databases...",
+    "tables": [
+      {
+        "title": "Fill the table",
+        "headers": ["Name", "Age", "City"],
+        "rows": [
+          ["", "", ""],
+          ["", "", ""]
+        ]
+      }
+    ]
   }
 ]
