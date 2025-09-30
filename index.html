@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Interview Wizard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .wizard-container {
+      width: 550px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      padding: 25px;
+      text-align: left;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    h2 {
+      color: #d9534f;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .code-box {
+      background: #1e1e2f;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: monospace;
+      white-space: pre;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    .btns {
+      text-align: right;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .progress {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="wizard-container">
+    <div class="progress" id="progressText">Loading...</div>
+    
+    <!-- Questions will be inserted here -->
+    
+    <div class="btns">
+      <button id="prevBtn" onclick="prevStep()" disabled>Previous</button>
+      <button id="nextBtn" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    let stepsData = [];
+
+    async function loadQuestions() {
+      try {
+        const res = await fetch("questions.json");
+        stepsData = await res.json();
+        renderSteps();
+        showStep(0);
+      } catch (err) {
+        document.getElementById("progressText").textContent =
+          "❌ Failed to load questions.json";
+      }
+    }
+
+    function renderSteps() {
+      const container = document.querySelector(".wizard-container");
+      const btns = document.querySelector(".btns");
+      const progressText = document.getElementById("progressText");
+
+      stepsData.forEach((q, index) => {
+        const stepDiv = document.createElement("div");
+        stepDiv.className = "step";
+        if (index === 0) stepDiv.classList.add("active");
+
+        stepDiv.innerHTML = `
+          <h2>${index + 1}. ${q.title}</h2>
+          <div class="code-box">${q.sql}</div>
+        `;
+        container.insertBefore(stepDiv, btns);
+      });
+
+      progressText.textContent = `Question 1 of ${stepsData.length}`;
+    }
+
+    function showStep(index) {
+      const steps = document.querySelectorAll(".step");
+      steps.forEach((step, i) => step.classList.toggle("active", i === index));
+      
+      document.getElementById("prevBtn").disabled = index === 0;
+      document.getElementById("nextBtn").textContent =
+        index === steps.length - 1 ? "Finish" : "Next";
+
+      document.getElementById("progressText").textContent =
+        `Question ${index + 1} of ${steps.length}`;
+    }
+
+    function nextStep() {
+      if (currentStep < stepsData.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        alert("🎉 You have completed all SQL questions!");
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    loadQuestions();
+  </script>
+</body>
+</html>
