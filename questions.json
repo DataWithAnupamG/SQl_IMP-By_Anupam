@@ -1,7 +1,7 @@
 [ 
   {
     "id": 1,
-    "title": "Combine Two Tables", "LeetCode:175",
+    "title": "Combine Two Tables (LeetCode:175)",
     "query": "select p.firstName,p.lastName,a.city,a.state \n from Person p \nleft outer join Address a \n on p.personId=a.personId;"
   },
   {
