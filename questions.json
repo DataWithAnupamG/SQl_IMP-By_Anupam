@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 1.1,
     "title": "Find duplicate records in a table",
     "query": "SELECT column1, column2, COUNT(*)\nFROM your_table\nGROUP BY column1, column2\nHAVING COUNT(*) > 1;"
   },
@@ -15,9 +15,9 @@
     "query": "SELECT e.name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.id\nWHERE d.id IS NULL;"
   },
   {
-    "id": 175,
+    "id": 1,
     "title": "Combine Two Tables",
-    "query": "SELECT * FROM table1\nUNION\nSELECT * FROM table2;"
+    "query": "select p.firstName,p.lastName,a.city,a.state \n from Person p \nleft outer join Address a \n on p.personId=a.personId;"
   },
   {
     "id": 176,
