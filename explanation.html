@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explanation</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+<style>
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }
+  .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+  h1 { font-size: 1.5rem; color: #2d3748; margin-bottom: 16px; }
+  p { color: #4a5568; margin-bottom: 16px; line-height: 1.5; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
+  th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+  th { background: #f9fafb; }
+  pre { background: #1e293b; color: white; padding: 12px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="container" id="explanation-container">Loading...</div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const qid = urlParams.get('id');
+
+  fetch('extra.json')
+    .then(res => res.json())
+    .then(data => {
+      const questionExtra = data.find(q => q.id == qid);
+      const container = document.getElementById('explanation-container');
+
+      if(!questionExtra){
+        container.innerHTML = "<p>No explanation found for this question.</p>";
+        return;
+      }
+
+      let html = `<h1>Explanation for Question ${qid}</h1>`;
+      html += `<p>${questionExtra.explanation}</p>`;
+
+      if(questionExtra.tables){
+        questionExtra.tables.forEach(tbl => {
+          html += `<h3>${tbl.title}</h3><table><thead><tr>`;
+          tbl.headers.forEach(h => html += `<th>${h}</th>`);
+          html += `</tr></thead><tbody>`;
+          tbl.rows.forEach(row => {
+            html += `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`;
+          });
+          html += `</tbody></table>`;
+        });
+      }
+
+      container.innerHTML = html;
+      Prism.highlightAll();
+    });
+</script>
+
+</body>
+</html>
