@@ -1,139 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SQL Questions</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Questions</title>
 
-  <!-- Prism.js for syntax highlighting -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<!-- Prism.js for syntax highlighting -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .question-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 0;
-      margin: 20px auto;
-      max-width: 95%; /* Fits nicely on mobile */
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid #e2e8f0;
-      overflow: hidden; /* for rounded header */
-    }
-
-    /* Header (dots + line) */
-    .card-header {
-      display: flex;
-      align-items: center;
-      padding: 10px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      background: #f9fafb;
-    }
-
-    .dots {
-      display: flex;
-      gap: 8px;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .dot:nth-child(1) { background: #e53e3e; }
-    .dot:nth-child(2) { background: #ecc94b; }
-    .dot:nth-child(3) { background: #38a169; }
-
-    .question-body {
-      padding: 20px;
-    }
-
-    .question-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 8px;
-    }
-
-    .question-text {
-      font-size: 0.95rem;
-      color: #4a5568;
-      margin-bottom: 16px;
-    }
-
-    /* Code box */
-    pre {
-      background: #1e293b !important;
-      border-radius: 12px;
-      padding: 14px;
-      overflow-x: auto;
-      border: 1px solid #0f172a;
-    }
-
-    code {
-      font-family: "Fira Code", "Courier New", monospace;
-      font-size: 0.85rem;
-    }
-
-    /* Make text and cards resize well on small screens */
-    @media (max-width: 600px) {
-      .question-title {
-        font-size: 1rem;
-      }
-      .question-text {
-        font-size: 0.85rem;
-      }
-      code {
-        font-size: 0.8rem;
-      }
-    }
-  </style>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }
+  .question-card { background: #fff; border-radius: 16px; padding: 0; margin: 20px auto; max-width: 95%; box-shadow: 0 6px 20px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden; }
+  .card-header { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid #e2e8f0; background: #f9fafb; }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot:nth-child(1) { background: #e53e3e; }
+  .dot:nth-child(2) { background: #ecc94b; }
+  .dot:nth-child(3) { background: #38a169; }
+  .expl-btn { margin-left: auto; background: #3182ce; color: white; font-weight: bold; border-radius: 50%; width: 28px; height: 28px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+  .expl-btn:hover { background: #2b6cb0; }
+  .question-body { padding: 20px; }
+  .question-title { font-size: 1.2rem; font-weight: 600; color: #2d3748; margin-bottom: 8px; }
+  .question-text { font-size: 0.95rem; color: #4a5568; margin-bottom: 16px; }
+  pre { background: #1e293b !important; border-radius: 12px; padding: 14px; overflow-x: auto; border: 1px solid #0f172a; }
+  code { font-family: "Fira Code", "Courier New", monospace; font-size: 0.85rem; }
+  @media (max-width: 600px) {
+    .question-title { font-size: 1rem; }
+    .question-text { font-size: 0.85rem; }
+    code { font-size: 0.8rem; }
+  }
+</style>
 </head>
 <body>
 
-  <div id="questions-container"></div>
+<div id="questions-container"></div>
 
-  <script>
-    // Load JSON and render cards
-    fetch("questions.json")
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("questions-container");
+<script>
+  fetch("questions.json")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("questions-container");
 
-        data.forEach(q => {
-          const card = document.createElement("div");
-          card.className = "question-card";
+      data.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "question-card";
 
-          card.innerHTML = `
-            <div class="card-header">
-              <div class="dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-              </div>
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
             </div>
-            <div class="question-body">
-              <div class="question-title">Question ${q.id}</div>
-              <div class="question-text">${q.title}</div>
-              <pre><code class="language-sql">${q.query}</code></pre>
-            </div>
-          `;
+            <a href="explanation.html?id=${q.id}" class="expl-btn" title="Explanation">?</a>
+          </div>
+          <div class="question-body">
+            <div class="question-title">Question ${q.id}</div>
+            <div class="question-text">${q.title}</div>
+            <pre><code class="language-sql">${q.query}</code></pre>
+          </div>
+        `;
 
-          container.appendChild(card);
-        });
-
-        Prism.highlightAll();
+        container.appendChild(card);
       });
-  </script>
+
+      Prism.highlightAll();
+    });
+</script>
 
 </body>
-</
+</html>
