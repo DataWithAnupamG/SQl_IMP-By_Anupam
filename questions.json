@@ -13,5 +13,105 @@
     "id": 3,
     "title": "Find employees without department (Left Join usage)",
     "query": "SELECT e.name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.id\nWHERE d.id IS NULL;"
+  },
+  {
+    "id": 175,
+    "title": "Combine Two Tables",
+    "query": "SELECT * FROM table1\nUNION\nSELECT * FROM table2;"
+  },
+  {
+    "id": 176,
+    "title": "Second Highest Salary",
+    "query": "SELECT MAX(salary) AS SecondHighestSalary\nFROM employees\nWHERE salary < (SELECT MAX(salary) FROM employees);"
+  },
+  {
+    "id": 177,
+    "title": "Nth Highest Salary",
+    "query": "SELECT DISTINCT salary\nFROM employees\nORDER BY salary DESC\nOFFSET N-1 ROWS\nFETCH NEXT 1 ROW ONLY;"
+  },
+  {
+    "id": 178,
+    "title": "Rank Scores",
+    "query": "SELECT name, score, RANK() OVER (ORDER BY score DESC) AS rank\nFROM scores;"
+  },
+  {
+    "id": 180,
+    "title": "Consecutive Numbers",
+    "query": "WITH CTE AS (\n  SELECT value, ROW_NUMBER() OVER (ORDER BY id) - value AS grp\n  FROM numbers\n)\nSELECT MIN(value) AS start, MAX(value) AS end\nFROM CTE\nGROUP BY grp;"
+  },
+  {
+    "id": 181,
+    "title": "Employees Earning More Than Their Managers",
+    "query": "SELECT e.name AS Employee, e.salary AS EmployeeSalary, m.name AS Manager, m.salary AS ManagerSalary\nFROM employees e\nJOIN employees m ON e.manager_id = m.id\nWHERE e.salary > m.salary;"
+  },
+  {
+    "id": 182,
+    "title": "Duplicate Emails",
+    "query": "SELECT email, COUNT(*) AS count\nFROM employees\nGROUP BY email\nHAVING COUNT(*) > 1;"
+  },
+  {
+    "id": 183,
+    "title": "Customers Who Never Order",
+    "query": "SELECT c.customer_id, c.name\nFROM customers c\nLEFT JOIN orders o ON c.customer_id = o.customer_id\nWHERE o.order_id IS NULL;"
+  },
+  {
+    "id": 184,
+    "title": "Department Highest Salary",
+    "query": "SELECT department_id, MAX(salary) AS HighestSalary\nFROM employees\nGROUP BY department_id;"
+  },
+  {
+    "id": 185,
+    "title": "Department Top Three Salaries",
+    "query": "SELECT *\nFROM (\n  SELECT employee_id, department_id, salary,\n         DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS rnk\n  FROM employees\n) t\nWHERE rnk <= 3;"
+  },
+  {
+    "id": 196,
+    "title": "Delete Duplicate Emails",
+    "query": "WITH CTE AS (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY email ORDER BY id) AS rn\n  FROM employees\n)\nDELETE FROM CTE WHERE rn > 1;"
+  },
+  {
+    "id": 197,
+    "title": "Rising Temperature",
+    "query": "SELECT t1.id, t1.record_date, t1.temperature\nFROM weather t1\nJOIN weather t2 ON t1.record_date = DATEADD(DAY, -1, t2.record_date)\nWHERE t1.temperature > t2.temperature;"
+  },
+  {
+    "id": 262,
+    "title": "Trips and Users",
+    "query": "SELECT u.user_id, u.name, COUNT(t.trip_id) AS TripCount\nFROM users u\nLEFT JOIN trips t ON u.user_id = t.user_id\nGROUP BY u.user_id, u.name;"
+  },
+  {
+    "id": 511,
+    "title": "Game Play Analysis I",
+    "query": "SELECT player_id, COUNT(*) AS TotalGames, SUM(score) AS TotalScore\nFROM game_play\nGROUP BY player_id;"
+  },
+  {
+    "id": 512,
+    "title": "Game Play Analysis II",
+    "query": "SELECT player_id, MAX(score) AS HighestScore, MIN(score) AS LowestScore\nFROM game_play\nGROUP BY player_id;"
+  },
+  {
+    "id": 534,
+    "title": "Game Play Analysis III",
+    "query": "SELECT player_id, AVG(score) AS AverageScore\nFROM game_play\nGROUP BY player_id;"
+  },
+  {
+    "id": 550,
+    "title": "Game Play Analysis IV",
+    "query": "SELECT player_id, COUNT(DISTINCT game_id) AS UniqueGames\nFROM game_play\nGROUP BY player_id;"
+  },
+  {
+    "id": 569,
+    "title": "Median Employee Salary",
+    "query": "SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) AS MedianSalary\nFROM employees;"
+  },
+  {
+    "id": 570,
+    "title": "Managers with at Least 5 Direct Reports",
+    "query": "SELECT manager_id, COUNT(*) AS DirectReports\nFROM employees\nGROUP BY manager_id\nHAVING COUNT(*) >= 5;"
+  },
+  {
+    "id": 571,
+    "title": "Find Median Given Frequency of Numbers",
+    "query": "WITH expanded AS (\n  SELECT number\n  FROM numbers\n  CROSS APPLY (SELECT TOP (frequency) 1 FROM master..spt_values) AS x(n)\n)\nSELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY number) AS MedianValue\nFROM expanded;"
   }
 ]
