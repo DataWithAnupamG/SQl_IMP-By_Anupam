@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Find duplicate records in a table",
+    "sql": "SELECT column1, column2, COUNT(*)\nFROM your_table\nGROUP BY column1, column2\nHAVING COUNT(*) > 1;"
+  },
+  {
+    "title": "Retrieve the second highest salary",
+    "sql": "SELECT MAX(salary) AS SecondHighestSalary\nFROM Employee\nWHERE salary < (SELECT MAX(salary) FROM Employee);"
+  },
+  {
+    "title": "Find employees without department",
+    "sql": "SELECT e.name\nFROM Employee e\nLEFT JOIN Department d\nON e.dept_id = d.id\nWHERE d.id IS NULL;"
+  }
+]
