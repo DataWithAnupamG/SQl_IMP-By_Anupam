@@ -3,159 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SQL Interview Wizard</title>
+  <title>SQL Questions</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f5f6fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
       margin: 0;
+      padding: 20px;
     }
-    .wizard-container {
-      width: 600px;
+
+    .question-card {
       background: white;
-      border-radius: 14px;
-      box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
-      padding: 25px;
-    }
-    .progress {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 15px;
-    }
-    .step {
-      display: none;
-    }
-    .step.active {
-      display: block;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    h2 {
-      color: #333;
-      font-size: 20px;
-      margin-bottom: 15px;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 700px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Code box style (like image) */
-    .code-box {
-      background: #1e1e2f;
-      color: #f8f8f2;
-      border-radius: 12px;
-      overflow-x: auto;
-      margin-bottom: 20px;
-      font-family: monospace;
-      font-size: 15px;
-    }
-    .code-header {
-      background: #2d2d3a;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      padding: 6px 10px;
-      display: flex;
-      gap: 6px;
-    }
-    .dot {
-      height: 12px;
-      width: 12px;
+    /* Decorative dots */
+    .question-card::before,
+    .question-card::after {
+      content: "";
+      position: absolute;
       border-radius: 50%;
-      display: inline-block;
+      background: #cbd5e0;
+      opacity: 0.3;
     }
-    .dot.red { background: #ff5f56; }
-    .dot.yellow { background: #ffbd2e; }
-    .dot.green { background: #27c93f; }
 
-    .code-content {
+    .question-card::before {
+      width: 80px;
+      height: 80px;
+      top: -20px;
+      left: -20px;
+    }
+
+    .question-card::after {
+      width: 120px;
+      height: 120px;
+      bottom: -40px;
+      right: -40px;
+    }
+
+    .question-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 15px;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      color: #4a5568;
+      margin-bottom: 20px;
+    }
+
+    .code-box {
+      background: #1e293b;
+      color: #f8fafc;
       padding: 15px;
-      white-space: pre;
+      border-radius: 12px;
+      font-family: "Courier New", monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
     }
 
-    /* SQL syntax highlighting */
-    .keyword { color: #569CD6; font-weight: bold; }
-    .func { color: #C586C0; }
-    .table { color: #4EC9B0; }
-    
-    .btns {
-      text-align: right;
+    .dots {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
     }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 5px;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e53e3e;
     }
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
+
+    .dot:nth-child(2) { background: #dd6b20; }
+    .dot:nth-child(3) { background: #38a169; }
   </style>
 </head>
 <body>
-  <div class="wizard-container">
-    <div class="progress" id="progressText">Loading...</div>
-    
-    <!-- Steps will be injected here -->
 
-    <div class="btns">
-      <button id="prevBtn" onclick="prevStep()" disabled>Previous</button>
-      <button id="nextBtn" onclick="nextStep()">Next</button>
+  <div class="question-card">
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="question-title">Question 1</div>
+    <div class="question-text">Write an SQL query to fetch all employees with a salary greater than 50,000.</div>
+    <div class="code-box">
+      SELECT *  
+      FROM Employees  
+      WHERE Salary &gt; 50000;
     </div>
   </div>
 
-  <script>
-    let currentStep = 0;
-    let stepsData = [];
+  <div class="question-card">
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="question-title">Question 2</div>
+    <div class="question-text">Write an SQL query to find duplicate email addresses in the Users table.</div>
+    <div class="code-box">
+      SELECT Email, COUNT(*)  
+      FROM Users  
+      GROUP BY Email  
+      HAVING COUNT(*) &gt; 1;
+    </div>
+  </div>
 
-    async function loadQuestions() {
-      try {
-        const res = await fetch("questions.json");
-        stepsData = await res.json();
-        renderSteps();
-        showStep(0);
-      } catch (err) {
-        document.getElementById("progressText").textContent =
-          "❌ Failed to load questions.json";
-      }
-    }
+  <div class="question-card">
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="question-title">Question 3</div>
+    <div class="question-text">Write an SQL query to get the 2nd highest salary.</div>
+    <div class="code-box">
+      SELECT MAX(Salary) AS SecondHighest  
+      FROM Employees  
+      WHERE Salary &lt; (SELECT MAX(Salary) FROM Employees);
+    </div>
+  </div>
 
-    function renderSteps() {
-      const container = document.querySelector(".wizard-container");
-      const btns = document.querySelector(".btns");
-
-      stepsData.forEach((q, index) => {
-        const stepDiv = document.createElement("div");
-        stepDiv.className = "step";
-        if (index === 0) stepDiv.classList.add("active");
-
-        stepDiv.innerHTML = `
-          <h2>${index + 1}. ${q.title}</h2>
-          <div class="code-box">
-            <div class="code-header">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
-            </div>
-            <div class="code-content">${highlightSQL(q.sql)}</div>
-          </div>
-        `;
-        container.insertBefore(stepDiv, btns);
-      });
-
-      document.getElementById("progressText").textContent =
-        `Question 1 of ${stepsData.length}`;
-    }
-
-    function highlightSQL(sql) {
-      return sql
-        .replace(/\b(SELECT|FROM|WHERE|GROUP BY|HAVING|COUNT|MAX|LEFT JOIN|ON|IS NULL)\b/gi,
-          '<span class="keyword">$1</span>')
-        .replace(/\b(Employee|Department|y
+</body>
+</html>
