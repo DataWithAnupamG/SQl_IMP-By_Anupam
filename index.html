@@ -6,8 +6,8 @@
   <title>SQL Interview Wizard</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fc;
+      font-family: "Segoe UI", sans-serif;
+      background: #f5f6fa;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -15,34 +15,72 @@
       margin: 0;
     }
     .wizard-container {
-      width: 550px;
+      width: 600px;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
       padding: 25px;
-      text-align: left;
+    }
+    .progress {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
     }
     .step {
       display: none;
     }
     .step.active {
       display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
     }
     h2 {
-      color: #d9534f;
-      margin-bottom: 15px;
+      color: #333;
       font-size: 20px;
+      margin-bottom: 15px;
     }
+
+    /* Code box style (like image) */
     .code-box {
       background: #1e1e2f;
       color: #f8f8f2;
-      padding: 15px;
-      border-radius: 10px;
-      font-family: monospace;
-      white-space: pre;
+      border-radius: 12px;
       overflow-x: auto;
       margin-bottom: 20px;
+      font-family: monospace;
+      font-size: 15px;
     }
+    .code-header {
+      background: #2d2d3a;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding: 6px 10px;
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .code-content {
+      padding: 15px;
+      white-space: pre;
+    }
+
+    /* SQL syntax highlighting */
+    .keyword { color: #569CD6; font-weight: bold; }
+    .func { color: #C586C0; }
+    .table { color: #4EC9B0; }
+    
     .btns {
       text-align: right;
     }
@@ -59,19 +97,14 @@
       background: #ccc;
       cursor: not-allowed;
     }
-    .progress {
-      margin-bottom: 15px;
-      font-size: 14px;
-      color: #555;
-    }
   </style>
 </head>
 <body>
   <div class="wizard-container">
     <div class="progress" id="progressText">Loading...</div>
     
-    <!-- Questions will be inserted here -->
-    
+    <!-- Steps will be injected here -->
+
     <div class="btns">
       <button id="prevBtn" onclick="prevStep()" disabled>Previous</button>
       <button id="nextBtn" onclick="nextStep()">Next</button>
@@ -97,7 +130,6 @@
     function renderSteps() {
       const container = document.querySelector(".wizard-container");
       const btns = document.querySelector(".btns");
-      const progressText = document.getElementById("progressText");
 
       stepsData.forEach((q, index) => {
         const stepDiv = document.createElement("div");
@@ -106,43 +138,24 @@
 
         stepDiv.innerHTML = `
           <h2>${index + 1}. ${q.title}</h2>
-          <div class="code-box">${q.sql}</div>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="code-content">${highlightSQL(q.sql)}</div>
+          </div>
         `;
         container.insertBefore(stepDiv, btns);
       });
 
-      progressText.textContent = `Question 1 of ${stepsData.length}`;
-    }
-
-    function showStep(index) {
-      const steps = document.querySelectorAll(".step");
-      steps.forEach((step, i) => step.classList.toggle("active", i === index));
-      
-      document.getElementById("prevBtn").disabled = index === 0;
-      document.getElementById("nextBtn").textContent =
-        index === steps.length - 1 ? "Finish" : "Next";
-
       document.getElementById("progressText").textContent =
-        `Question ${index + 1} of ${steps.length}`;
+        `Question 1 of ${stepsData.length}`;
     }
 
-    function nextStep() {
-      if (currentStep < stepsData.length - 1) {
-        currentStep++;
-        showStep(currentStep);
-      } else {
-        alert("🎉 You have completed all SQL questions!");
-      }
-    }
-
-    function prevStep() {
-      if (currentStep > 0) {
-        currentStep--;
-        showStep(currentStep);
-      }
-    }
-
-    loadQuestions();
-  </script>
-</body>
-</html>
+    function highlightSQL(sql) {
+      return sql
+        .replace(/\b(SELECT|FROM|WHERE|GROUP BY|HAVING|COUNT|MAX|LEFT JOIN|ON|IS NULL)\b/gi,
+          '<span class="keyword">$1</span>')
+        .replace(/\b(Employee|Department|y
