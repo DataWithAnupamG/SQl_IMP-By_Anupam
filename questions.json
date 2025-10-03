@@ -32,7 +32,7 @@
   {
     "id": 178,
     "title": "Rank Scores",
-    "query": "SELECT name, score, RANK() OVER (ORDER BY score DESC) AS rank\nFROM scores;"
+    "query": "SELECT name, DENSE_RAN() OVER (ORDER BY score DESC) AS rank\nFROM scores;"
   },
   {
     "id": 180,
